@@ -1,0 +1,65 @@
+import random
+
+def kleine_malreihe_abfragen(malreihen, richtig, falsch):
+    # Zufällige Auswahl einer Einmaleins-Reihe
+    malreihe = random.choice(malreihen)
+
+    # Entferne die ausgewählte Reihe, um sie nicht erneut zu verwenden
+    malreihen.remove(malreihe)
+
+    # Berechnung der richtigen Antwort
+    ergebnis = malreihe[0] * malreihe[1]
+
+    # Nutzereingabe abfragen und sicherstellen, dass eine gültige Eingabe erfolgt
+    while True:
+        try:
+            antwort = input(f"Berechne {malreihe[0]} * {malreihe[1]}: ")
+            if antwort.lower() == 'exit':
+                exit()
+            antwort = int(antwort)
+            break  # Wenn die Eingabe erfolgreich in eine Ganzzahl umgewandelt wurde, die Schleife beenden
+        except ValueError:
+            print("Ungültige Eingabe. Bitte gib eine ganze Zahl ein.")
+
+    # Überprüfung der Antwort
+    if antwort == ergebnis:
+        print("Richtig!")
+        richtig.append((malreihe[0], malreihe[1]))
+    else:
+        print(f"Falsch! Die richtige Antwort ist {ergebnis}.")
+        falsch.append((malreihe[0], malreihe[1], ergebnis))
+
+# Funktion zur Anzeige des Ergebnisses am Ende
+def zeige_ergebnis(richtig, falsch):
+    gesamt = len(richtig) + len(falsch)
+    prozent_richtig = (len(richtig) / gesamt) * 100
+
+    print("\nErgebnis:")
+    print(f"Du hast {prozent_richtig:.2f}% der Aufgaben richtig gelöst.\n")
+
+    if falsch:
+        print("Falsch gelöste Aufgaben:")
+        for aufgabe in falsch:
+            print(f"{aufgabe[0]} * {aufgabe[1]} = {aufgabe[2]}")
+
+# Liste der kleinen Einmaleins-Reihen von 1 bis 10
+malreihen = [(i, j) for i in range(1, 11) for j in range(1, 11)]
+
+# Fortschrittsbalken
+anzahl_rechnungen = len(malreihen)
+
+# Listen zur Verfolgung von richtig und falsch gelösten Aufgaben
+richtig_geloest = []
+falsch_geloest = []
+
+# Hauptprogrammschleife
+while malreihen:
+    # Fortschrittsbalken aktualisieren
+    fortschritt = (anzahl_rechnungen - len(malreihen)) / anzahl_rechnungen
+    print(f"Fortschritt: [{'#' * int(fortschritt * 20):<20}] {int(fortschritt * 100)}%")
+
+    # Eine Rechnung abfragen
+    kleine_malreihe_abfragen(malreihen, richtig_geloest, falsch_geloest)
+
+# Ergebnis anzeigen, wenn alle Aufgaben gelöst sind
+zeige_ergebnis(richtig_geloest, falsch_geloest)
